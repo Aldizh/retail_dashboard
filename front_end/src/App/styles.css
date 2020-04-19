@@ -1,0 +1,74 @@
+.App {
+  text-align: center;
+}
+
+body {
+  background: #e6a163;
+}
+
+h3 {
+  text-align: center;
+}
+
+table {
+  text-align: center;
+}
+
+.editDiv {
+  margin: auto;
+  padding: 10px;
+  background-color: #343a40;
+
+  span {
+    width: 33%;
+
+    p {
+      text-align: center;
+    }
+  }
+
+  a {
+    width: 300px;
+  }
+}
+
+input[type='text'] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type='number'] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.demo-layout-transparent {
+  background: rgb(174, 226, 238);
+  background: radial-gradient(
+    circle,
+    rgba(174, 226, 238, 1) 13%,
+    rgba(211, 224, 238, 1) 100%
+  );
+  /* background: url('../images/transparent.png') center / cover; */
+}
+.demo-layout-transparent .mdl-layout__header,
+.demo-layout-transparent .mdl-layout__drawer-button {
+  /* This background is dark, so we set text to white. Use 87% black instead if
+     your background is light. */
+  color: white;
+}
+
+.translationButtons {
+  text-align: center;
+  margin: auto;
+  width: 50%;
+  margin-bottom: 5px;
+}

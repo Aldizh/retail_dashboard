@@ -1,0 +1,19 @@
+#page-numbers {
+  justify-content: center;
+  background: none;
+  padding-bottom: 10px;
+}
+
+#page-numbers > li {
+  margin: 0 0.3em;
+  user-select: none;
+  cursor: pointer;
+}
+
+#page-numbers > li:active {
+  color: blue;
+}
+
+.highlight {
+  color: black !important;
+}
