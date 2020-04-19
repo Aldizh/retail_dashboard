@@ -1,0 +1,13 @@
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  /* background-color: #f8f9fa!important; */
+  text-align: center;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 0.7em;
+  font-weight: bold;
+  color: #FFF;
+  background-color: #343a40;
+}

@@ -1,0 +1,25 @@
+{
+  "name": "back_end",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -R min --exit",
+    "start": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.5.1",
+    "body-parser": "^1.18.3",
+    "config": "^3.3.9",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.3",
+    "jsonwebtoken": "^9.0.2",
+    "mocha": "^10.2.0",
+    "mongoose": "7.5.0",
+    "morgan": "^1.9.1"
+  }
+}
