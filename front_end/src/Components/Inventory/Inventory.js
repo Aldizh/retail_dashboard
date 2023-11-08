@@ -5,17 +5,19 @@ import {
 } from 'reactstrap';
 import axios from 'axios';
 
+import { useTheme } from '../../Themes/ThemeContext';
 import ButtonGroup from '../ButtonGroup';
 import { formatPrice } from '../../utils/numbers';
 import inventoryData from '../../data/inventory';
 import './styles.css';
 
 function SalesComp({ t, refreshArticles }) {
+  const { currentTheme } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
   const [pageData, setPageData] = useState([])
   const [currentPage, setCurrentPage] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
-  const recordsPerPage = 20
+  const recordsPerPage = 15
   
   useEffect(() => {
     axios.get(`/api/articles`)
@@ -81,9 +83,15 @@ function SalesComp({ t, refreshArticles }) {
   }
 
   return (
-    <div className="inventory">
-      <h3 id="shitjetShumice">Current Inventory</h3>
-      <Table dark>
+    <div style={{
+        color: currentTheme.text,
+        textAlign: 'center'
+      }}
+    >
+      <h3 style={{
+        background: currentTheme.background}}
+        id="shitjetShumice">{t('inventory')}</h3>
+      <Table responsive size="sm">
         <thead>
           <tr>
             <th>{t('barCode')}</th>
@@ -103,13 +111,14 @@ function SalesComp({ t, refreshArticles }) {
           ))}
         </tbody>
       </Table>
-      <ul id="page-numbers">
+      <ul id="page-numbers"  style={{
+        background: currentTheme.background}}>
         {pageNumbers.map((number, i) => (
           <li
             key={number}
             id={number}
             onClick={handlePageClick}
-            className={i + 1 === currentPage ? "highlight" : ""}
+            className={i === currentPage ? "highlight" : ""}
           >
             {number}
           </li>

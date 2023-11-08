@@ -1,19 +1,22 @@
 #page-numbers {
-  justify-content: center;
-  background: none;
-  padding-bottom: 10px;
+  padding: 0;
+  white-space: nowrap; /* for horizontal scroll */
+  overflow: auto;
+  margin: auto;
+  height: 40px;
 }
 
 #page-numbers > li {
+  display: inline-block;
   margin: 0 0.3em;
   user-select: none;
   cursor: pointer;
 }
 
-#page-numbers > li:active {
-  color: blue;
+#page-numbers > li:hover {
+  color: rgb(0, 191, 255);
 }
 
 .highlight {
-  color: black !important;
+  color: rgb(0, 102, 255) !important;
 }

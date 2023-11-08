@@ -12,7 +12,7 @@ const router = express.Router();
 */
 router.get("/articles", async (req, res) => {
   const pageNumber = req.query.pageNumber || 0
-  const resultsPerPage = 10
+  const resultsPerPage = 15
 
   let articles = []
 

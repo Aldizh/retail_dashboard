@@ -11,8 +11,8 @@ import {
   logoutUser,
 } from "./Realm"
 import Login from "./Login"
-import * as serviceWorker from "./serviceWorker"
-import "./index.css"
+import { ThemeProvider } from "./Themes/ThemeContext";
+// import * as serviceWorker from "./serviceWorker"
 
 export const history = createBrowserHistory();
 
@@ -21,18 +21,18 @@ class MyApp extends React.Component {
 
   render() {
     return isLoggedIn() ? (
-      <>
+      <ThemeProvider>
         <NavBar handleLogout={logoutUser} isLoggedIn={isLoggedIn} /><br />
         <Router history={history}/>
         <Footer />
-      </>
+      </ThemeProvider>
     ) : (
-      <>
+      <ThemeProvider>
         <NavBar handleLogout={logoutUser} isLoggedIn={isLoggedIn} />
         <br />
         <Login loginAnonymous={loginAnonymous} loginWithKey={loginWithKey} />
         <Footer />
-      </>
+      </ThemeProvider>
     );
   }
 }

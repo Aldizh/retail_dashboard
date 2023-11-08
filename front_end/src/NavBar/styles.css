@@ -1,27 +1,22 @@
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #333;
-}
-
-li {
-  float: left;
-}
-
-li a {
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
-
 li a:hover:not(.active) {
-  background-color: #111;
+  background-color: grey;
 }
 
-.active {
+/* center nav contents on mobile */
+@media (max-width: 480px) {
+  .container-fluid {
+    justify-content: center!important;
+  }
+}
+
+.navButton {
+  width: 100%!important
+}
+
+.navButton a:hover:not(.active) {
+  background-color: grey;
+}
+
+.navBrand:hover:not(.active) {
   background-color: grey;
 }
