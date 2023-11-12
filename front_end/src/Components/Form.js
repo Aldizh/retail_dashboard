@@ -1,138 +1,137 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from "react";
+import { Form, Label, FormGroup, Input, Button } from "reactstrap";
 
-class Form extends Component {
-  constructor(props) {
-    super(props);
+import { useTheme } from '../../Themes/ThemeContext';
 
-    this.onChangeName = this.onChangeName.bind(this);
-    this.onChangeBuyPrice = this.onChangeBuyPrice.bind(this);
-    this.onChangeQuantity = this.onChangeQuantity.bind(this);
-    this.onChangeSellPrice = this.onChangeSellPrice.bind(this);
-    this.submitHandler = this.submitHandler.bind(this);
+const NewSale = ({ sale, onSubmit, editMode, t }) => {
+  const { currentTheme } = useTheme();
+  const {
+    _id = "",
+    name = "",
+    quantity = "",
+    buyPrice = "",
+    sellPrice = "",
+    category = "",
+  } = sale;
 
-    const {
-      _id = "",
-      name = "",
-      quantity = "",
-      buyPrice = "",
-      sellPrice = "",
-      category = "",
-    } = this.props.sale
+  const [state, setState] = useState({
+    id: _id,
+    name,
+    quantity,
+    buyPrice: parseFloat(buyPrice) || 0,
+    sellPrice: parseFloat(sellPrice) || 0,
+    category,
+  });
 
-    this.state = {
+  useEffect(() => {
+    setState({
       id: _id,
+      name,
+      quantity,
+      buyPrice: parseFloat(buyPrice) || 0,
+      sellPrice: parseFloat(sellPrice) || 0,
+      category,
+    });
+  }, [sale]);
+
+  const onChangeName = (e) => {
+    setState((prevState) => ({ ...prevState, name: e.target.value }));
+  };
+
+  const onChangeBuyPrice = (e) => {
+    setState((prevState) => ({ ...prevState, buyPrice: parseFloat(e.target.value) }));
+  };
+
+  const onChangeSellPrice = (e) => {
+    setState((prevState) => ({ ...prevState, sellPrice: parseFloat(e.target.value) }));
+  };
+
+  const onChangeQuantity = (e) => {
+    setState((prevState) => ({ ...prevState, quantity: parseFloat(e.target.value) }));
+  };
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+
+    const { id, name, quantity, buyPrice, sellPrice, category } = state;
+
+    let updated = {
       name,
       quantity,
       buyPrice,
       sellPrice,
-      category
+      category,
     };
-  }
 
-  onChangeName(e) {
-    this.setState({ name: e.target.value });
-  }
+    if (id) updated.id = id;
 
-  onChangeBuyPrice(e) {
-    this.setState({ buyPrice: parseFloat(e.target.value) });
-  }
+    onSubmit(updated);
+  };
 
-  onChangeSellPrice(e) {
-    this.setState({ sellPrice: parseFloat(e.target.value) });
-  }
+  return (
+    <div style={{
+      background: currentTheme.background,
+      color: currentTheme.text,
+      textAlign: 'center'
+    }}
+    >
+      <Form onSubmit={submitHandler}>
+        <FormGroup>
+          <Label for="categorySelect">{t("category")}</Label>
+          <Input
+            type="select"
+            id="categorySelect"
+            name="category"
+            placeholder="Select category"
+            value={state.category}
+            onChange={(e) => setState((prev) => ({ ...prev, category: e.target.value }))}
+          >
+            <option value="big">{t("big")}</option>
+            <option value="small">{t("small")}</option>
+          </Input>
+        </FormGroup>
+        <FormGroup>
+          <Label for="name">{t("item")}</Label>
+          <Input id="name" type="text" placeholder="Kiwis" value={state.name} onChange={onChangeName} />
+        </FormGroup>
+        <FormGroup>
+          <Label for="quantity">{t("quantity")}</Label>
+          <Input
+            id="quantity"
+            type="number"
+            placeholder="10"
+            value={state.quantity}
+            onChange={onChangeQuantity}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label for="buy_price">{t("buyPrice")}</Label>
+          <Input
+            id="buy_price"
+            type="number"
+            step="0.1"
+            placeholder="$0.4"
+            value={state.buyPrice}
+            onChange={onChangeBuyPrice}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label for="sell_price">{t("sellPrice")}</Label>
+          <Input
+            id="sell_price"
+            type="number"
+            step="0.1"
+            placeholder="$0.6"
+            value={state.sellPrice}
+            onChange={onChangeSellPrice}
+          />
+        </FormGroup>
+        <Button className="formBtn" color="success">
+          {editMode ? t("updateSale") : t("newSale")}
+        </Button>
+      </Form>
+    </div>
+  );
+};
 
-  onChangeQuantity(e) {
-    this.setState({ quantity: parseFloat(e.target.value) });
-  }
-
-  submitHandler(e){
-    e.preventDefault();
-
-    const { onSubmit } = this.props
-
-    const {
-      saleId, name, quantity, buyPrice, sellPrice, category,
-    } = this.state;
-
-    const updated = {
-      saleId, name, quantity, buyPrice, sellPrice, category
-    }
-
-    onSubmit(updated)
-  }
-
-  render() {
-    const { t, editMode } = this.props
-    const { category, name, quantity, buyPrice, sellPrice } = this.state
-
-    return (
-      <div className="createFormContainer">
-        <form className="add-form" onSubmit={this.submitHandler}>
-          <div className="form-control">
-            <label>{t('category')}</label>
-            <select
-              value={category}
-              name="cars"
-              id="categorySelect"
-              onChange={(e) => this.setState({ category: e.target.value })}
-            >
-              <option value="big">{t('big')}</option>
-              <option value="small">{t('small')}</option>
-            </select>
-          </div>
-          <div className="form-control">
-            <label>{t('item')}</label>
-            <input
-              id="name"
-              type="text"
-              name="name"
-              placeholder=""
-              value={name}
-              onChange={this.onChangeName}
-            />
-          </div>
-          <div className="form-control">
-            <label>{t('quantity')}</label>
-            <input
-              id="quantity"
-              type="number"
-              name="quantity"
-              placeholder=""
-              value={quantity}
-              onChange={this.onChangeQuantity}
-            />
-          </div>
-          <div className="form-control">
-            <label>{t('buyPrice')}</label>
-            <input
-              id="buy_price"
-              type="number"
-              name="buy_price"
-              step="0.1"
-              placeholder=""
-              value={buyPrice}
-              onChange={this.onChangeBuyPrice}
-            />
-          </div>
-          <div className="form-control">
-            <label>{t('sellPrice')}</label>
-            <input
-              id="sell_price"
-              type="number"
-              step="0.1"
-              name="sell_price"
-              placeholder=""
-              value={sellPrice}
-              onChange={this.onChangeSellPrice}
-            />
-          </div>
-          <div style={{ margin: 10 }}>
-            <input type="submit" value={editMode ? t('updateSale') : t('newSale')} className="btn btn-success btn-block" />
-          </div>
-        </form>
-      </div>
-    )
-  }
-}
-
-export default Form
+export default NewSale;
