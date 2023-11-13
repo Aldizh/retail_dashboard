@@ -99,21 +99,15 @@ router.put("/articles/:id", (req, res, next) => {
   const { id } = req.params
   const objectId = new mongoose.Types.ObjectId(id)
 
-  Article
-    .findById(objectId).exec()
-    .then((article) => {
-      if (article.id) {
-        Article.updateOne({ id: article.id }, {
-          name,
-          quantity,
-          buyPrice
-        }).then(record => {
-          return res.json({ success: true, record})
-        }).catch(err => {
-          return res.status(400).json({ success: false, error: err})
-        })
-      } else return res.status(400).json({ success: false, error: "This record does not exist" });
-    }).catch(err => res.json({ success: false, data: [], err }))
+  Article.findOneAndUpdate({ _id: objectId }, {
+    name,
+    quantity,
+    buyPrice
+  }).then(record => {
+    return res.json({ success: true, record })
+  }).catch(err => {
+    return res.status(400).json({ success: false, error: err})
+  })
 });
 
 // deletes a record from our database
