@@ -4,77 +4,81 @@ import {
   Table,
 } from 'reactstrap';
 import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux'
 
+import { updatePage, updatePageData, updateTotalCount } from '../../redux/inventory_reducer'
 import { useTheme } from '../../Themes/ThemeContext';
 import ButtonGroup from '../ButtonGroup';
 import { formatPrice } from '../../utils/numbers';
 import inventoryData from '../../data/inventory';
 import './styles.css';
 
-function SalesComp({ t, refreshArticles }) {
+const Inventory = ({ t }) => {  
+  const dispatch = useDispatch()
+  const pageData = useSelector((state) => state.page.pageData)
+  const currentPage = useSelector((state) => state.page.currentPage)
+  const totalCount = useSelector((state) => state.page.totalCount)
+  const recordsPerPage = useSelector((state) => state.page.recordsPerPage)
+
   const { currentTheme } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
-  const [pageData, setPageData] = useState([])
-  const [currentPage, setCurrentPage] = useState(0)
-  const [totalCount, setTotalCount] = useState(0)
-  const recordsPerPage = 15
-  
+
   useEffect(() => {
-    axios.get(`/api/articles`)
+    axios
+      .get(`/api/articles?pageNumber=${currentPage}`)
       .then(({ data }) => {
-        setTotalCount(data.data.length)
+        dispatch(updatePageData(data.data))
+      })
+  }, [currentPage])
+
+  useEffect(() => {
+    axios
+      .get(`/api/articles`)
+      .then(({ data }) => {
+        dispatch(updateTotalCount(data.data.length))
       })
   }, [])
 
-  useEffect(() => {
-    axios.get(`/api/articles?pageNumber=${currentPage}`)
-      .then(({ data }) => setPageData(data.data))
-  }, [totalCount, currentPage])
-
   const handlePageClick = (event) => {
     const pageIndex = Number(event.target.id) - 1
-    setCurrentPage(pageIndex)
+    dispatch(updatePage(pageIndex))
   }
 
-  const handleCreateUpdate = async () => {
+  const handleDataLoad = async () => {
     setIsLoading(true);
     await axios.post("/api/articles", inventoryData).catch((err) => {
-      console.log("bulk insert failed", err);
       setIsLoading(false);
+      throw new Error(err);
     });
 
     const updated = await axios.get("/api/articles")
-    const totalCount = updated.data.data.length
-    setTotalCount(totalCount)
+    dispatch(updateTotalCount(updated.data.data.length))
 
     // pagination data
     let pageNum = Math.ceil(totalCount / recordsPerPage)
-    setCurrentPage(pageNum)
+    dispatch(updatePage(pageNum))
 
-    refreshArticles(); // ensures redux state is updated properly
     setIsLoading(false);
   }
 
-  const handleDelete = async () => {
+  const handleBulkDelete = async () => {
     setIsLoading(true);
     const res = await axios.delete("/api/articles").catch((err) => {
-      console.log("bulk delete failed", err);
       setIsLoading(false);
+      throw new Error(err);
     });
   
     setIsLoading(false);
     if (res.status === 200) {
       console.log("successfully deleted test data");
-      refreshArticles();
     }
 
     const updated = await axios.get("/api/articles")
+    dispatch(updateTotalCount(updated.data.data.length))
   
     // pagination
-    const totalCount = updated.data.data.length
-    setTotalCount(totalCount)
     let pageNum = Math.ceil(totalCount / recordsPerPage)
-    setCurrentPage(pageNum)
+    dispatch(updatePage(pageNum))
   }
 
   const pageNumbers = []
@@ -125,8 +129,8 @@ function SalesComp({ t, refreshArticles }) {
         ))}
       </ul>
       <ButtonGroup
-        updateHandler={handleCreateUpdate}
-        deleteHandler={handleDelete}
+        updateHandler={handleDataLoad}
+        deleteHandler={handleBulkDelete}
         updateText={t('loadAll')}
         deleteText={t('deleteAll')}
         isLoading={isLoading}
@@ -135,4 +139,4 @@ function SalesComp({ t, refreshArticles }) {
   );
 }
 
-export default withTranslation()(SalesComp);
+export default withTranslation()(React.memo(Inventory));

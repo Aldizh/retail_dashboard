@@ -17,8 +17,6 @@ import { ThemeProvider } from "./Themes/ThemeContext";
 export const history = createBrowserHistory();
 
 class MyApp extends React.Component {
-  state = { data: [] }
-
   render() {
     return isLoggedIn() ? (
       <ThemeProvider>
