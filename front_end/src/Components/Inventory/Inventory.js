@@ -22,6 +22,8 @@ const Inventory = ({ t }) => {
 
   const { currentTheme } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
+  const [pageNumbers, setPageNumbers] = useState([]);
+  const [pageGroup, setPageGroup] = useState(0);
 
   useEffect(() => {
     axios
@@ -39,8 +41,17 @@ const Inventory = ({ t }) => {
       })
   }, [])
 
+  useEffect(() => {
+    let pages = []
+    const max = pageGroup * recordsPerPage + recordsPerPage
+    for (let i = pageGroup * recordsPerPage + 1; i <= max; i++) {
+      if (i < totalCount / recordsPerPage) pages.push(i)
+    }
+    setPageNumbers(pages)
+  }, [totalCount, pageGroup])
+
   const handlePageClick = (event) => {
-    const pageIndex = Number(event.target.id) - 1
+    const pageIndex = Number(event.target.id)
     dispatch(updatePage(pageIndex))
   }
 
@@ -81,11 +92,6 @@ const Inventory = ({ t }) => {
     dispatch(updatePage(pageNum))
   }
 
-  const pageNumbers = []
-  for (let i = 1; i <= Math.ceil(totalCount / recordsPerPage); i++) {
-    pageNumbers.push(i)
-  }
-
   return (
     <div style={{
         color: currentTheme.text,
@@ -115,18 +121,55 @@ const Inventory = ({ t }) => {
           ))}
         </tbody>
       </Table>
-      <ul id="page-numbers"  style={{
-        background: currentTheme.background}}>
-        {pageNumbers.map((number, i) => (
-          <li
-            key={number}
-            id={number}
-            onClick={handlePageClick}
-            className={i === currentPage ? "highlight" : ""}
-          >
-            {number}
-          </li>
-        ))}
+      <ul id="page-numbers"
+        style={{background: currentTheme.background}}
+      >
+        <button
+          className="nav-button"
+          id="prev-button"
+          onClick={() => {
+            const newPage = (pageGroup - 1) * recordsPerPage
+            if (newPage > -1) {
+              axios
+                .get(`/api/articles?pageNumber=${newPage + 1}`)
+                .then(({ data }) => {
+                  dispatch(updatePageData(data.data))
+                  dispatch(updatePage(newPage + 1))
+                })
+              setPageGroup(pageGroup - 1)
+            }
+          }}
+        >&lt;</button>
+        {pageNumbers.map((number, i) => {
+          const pageShift = pageGroup * recordsPerPage
+          return (
+            <li
+              key={number}
+              id={number}
+              onClick={handlePageClick}
+              className={(i + pageShift + 1) === currentPage ? "highlight" : ""}
+            >
+              {number}
+            </li>
+          )
+        })}
+        <button
+          className="nav-button"
+          id="next-button"
+          onClick={() => {
+            const newPage = (pageGroup + 1) * recordsPerPage
+
+            if (newPage < totalCount / recordsPerPage) {
+              axios
+                .get(`/api/articles?pageNumber=${newPage + 1}`)
+                .then(({ data }) => {
+                  dispatch(updatePageData(data.data))
+                  dispatch(updatePage(newPage + 1))
+                })
+              setPageGroup(pageGroup + 1)
+            }
+          }}
+        >&gt;</button>
       </ul>
       <ButtonGroup
         updateHandler={handleDataLoad}

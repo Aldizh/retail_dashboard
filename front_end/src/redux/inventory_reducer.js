@@ -4,7 +4,7 @@ export const pageSlice = createSlice({
   name: 'page',
   initialState: {
     pageData: [],
-    currentPage: 0,
+    currentPage: 1,
     totalCount: 0,
     recordsPerPage: 15
   },
