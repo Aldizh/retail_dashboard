@@ -11,7 +11,7 @@ const router = express.Router();
  * @return {res} Express response
 */
 router.get("/articles", async (req, res) => {
-  const pageNumber = req.query.pageNumber || 0
+  const pageNumber = req.query.pageNumber
   const resultsPerPage = 15
 
   let articles = []
@@ -19,7 +19,7 @@ router.get("/articles", async (req, res) => {
   if (pageNumber) {
     articles = await Article
       .find({})
-      .skip(resultsPerPage * pageNumber)
+      .skip(resultsPerPage * (pageNumber - 1))
       .limit(resultsPerPage)
       .catch(err => res.json({ success: false, data: [], err }))
   } else {

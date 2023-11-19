@@ -133,19 +133,28 @@ const EditArticle = ({ setAlertMessage, setAlertOpen, t }) => {
           type="text"
           placeholder={t("nameNew")}
           value={item.name || ""}
-          onChange={(e) => setItem({ ...item, name: e.target.value })}
+          onChange={(e) => {
+            e.persist()
+            setItem(previousItem => ({...previousItem, name: e.target.value }))
+          }}
         />
         <Input
           type="number"
           placeholder={t("quantityNew")}
           value={item.quantity || ""}
-          onChange={(e) => setItem({ ...item, quantity: parseFloat(e.target.value) })}
+          onChange={(e) => {
+            e.persist()
+            setItem((previousItem) => ({...previousItem, quantity: parseFloat(e.target.value) }))
+          }}
         />
         <Input
           type="number"
           placeholder={t("buyPriceNew")}
           value={item.buyPrice || ""}
-          onChange={(e) => setItem({ ...item, buyPrice: parseFloat(e.target.value) })}
+          onChange={(e) => {
+            e.persist()
+            setItem(previousItem => ({...previousItem, buyPrice: e.target.value }))
+          }}
         />
         <ButtonGroup
           updateHandler={updateArticle}
