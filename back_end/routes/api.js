@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const Article = require('../models/article')
+const Sale = require('../models/sale')
+
 const router = express.Router();
 
 /*
@@ -131,6 +133,103 @@ router.delete("/articles", (req, res, next) => {
   }).catch(err => {
     return res.status(400).json({ success: false, error: err})
   })
+});
+
+// SALES ROUTES
+// fetches all available records from our database
+router.get("/sales", async (req, res) => {
+  const data = await Sale.find({}).catch(err => {
+    return res.json({ success: false, error: err });
+  })
+  return res.json({ success: true, data });
+});
+
+// get data by id
+router.get("/sales/:id", (req, res, next) => {
+  const { id } = req.params
+  const objectId = new mongoose.Types.ObjectId(id)
+
+  Sale
+    .findById(objectId).exec()
+    .then((sale) => res.json({ success: true, data: sale }))
+    .catch(err => res.json({ success: false, data: [], err }))
+});
+
+
+// insert one or many records in our database
+router.post("/sales", (req, res, next) => {
+  if (Array.isArray(req.body)) {
+    Sale.insertMany(req.body).then((data) => {
+      return res.json({ success: true, data: data });
+    }).catch(err => {
+      return res.status(400).json({ success: false, error: err });
+    })
+  } else {
+    const {
+      name,
+      quantity,
+      buyPrice,
+      sellPrice,
+      category
+    } = req.body;
+
+    let sale = new Sale({
+      name,
+      quantity,
+      buyPrice,
+      sellPrice,
+      category
+    });
+
+    sale
+      .save()
+      .then(result => {
+        return res.json({ success: true, sale });
+      })
+      .catch(err => {
+        console.log('error creating sale', err)
+        return res.status(400).json({error: 'Bad request'});
+      })
+  }
+});
+
+// updates an existing record in our database
+router.put("/sales/:id", (req, res, next) => {
+  const { name, quantity, buyPrice, sellPrice, category } = req.body
+
+  const { id } = req.params
+  const objectId = new mongoose.Types.ObjectId(id)
+
+  Sale
+    .findById(objectId).exec()
+    .then((sale) => {
+      if (sale._id) {
+        Sale.updateOne({ _id: objectId }, {
+          name,
+          quantity,
+          buyPrice,
+          sellPrice,
+          category
+        }).then(record => {
+          return res.json({ success: true, record})
+        }).catch(err => {
+          return res.status(400).json({ success: false, error: err})
+        })
+      } else return res.status(400).json({ success: false, error: "This record does not exist" });
+    }).catch(err => res.json({ success: false, data: [], err }))
+});
+
+router.delete("/sales/:id", (req, res, next) => {
+  const { id } = req.params
+  const objectId = new mongoose.Types.ObjectId(id)
+
+  Sale
+    .findByIdAndDelete(objectId).exec()
+    .then((deleted) => {
+      return res.json({ success: true, data: deleted })
+    }).catch(err => {
+      return res.status(400).json({ success: false, error: err})
+    })
 });
 
 module.exports = router;

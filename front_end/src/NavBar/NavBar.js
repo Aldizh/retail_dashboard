@@ -38,15 +38,15 @@ const NavBar = ({ t, handleLogout, isLoggedIn, loginWithGoogle, history }) => {
           <NavItem>
             <NavLink style={{ color: currentTheme.text }} href="/dashboard">{t("home")}</NavLink>
           </NavItem>
-          {/* <NavItem>
+          <NavItem>
             <NavLink style={{ color: currentTheme.text }} href="/create">{t("dataEntry")}</NavLink>
           </NavItem>
           <NavItem>
-            <NavLink style={{ color: currentTheme.text }} href="/pakice">{t("small")}</NavLink>
+            <NavLink style={{ color: currentTheme.text }} href="/small">{t("small")}</NavLink>
           </NavItem>
           <NavItem style={{ color: currentTheme.text }}>
-            <NavLink style={{ color: currentTheme.text }} href="/shumice">{t("big")}</NavLink>
-          </NavItem> */}
+            <NavLink style={{ color: currentTheme.text }} href="/large">{t("big")}</NavLink>
+          </NavItem>
         </Nav>
       </Collapse>
       <div>
