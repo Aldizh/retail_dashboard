@@ -61,9 +61,8 @@ const EditArticle = ({ setAlertMessage, setAlertOpen, t }) => {
     };
     axios.post("/api/articles", newRecord).then((response) => {
       if (response.status === 200) {
-        const newData = data;
-        newData.push(newRecord);
-        setData(newData);
+        // success
+        console.log('successfully created')
       }
     });
   };
