@@ -25,6 +25,15 @@ const App = ({ i18n }) => {
     i18n.changeLanguage(language)
   }, [language])
 
+  useEffect(() => {
+    let timer;
+    if (alertOpen) timer = setTimeout(() => { setAlertOpen(false) }, 3 * 1000);
+
+    return () => {
+      timer && clearTimeout(timer);
+    };
+  }, [alertOpen])
+
   const onLanguageHandle = (event) => {
     const newLang = event.target.value;
     setLanguage(newLang);
@@ -71,7 +80,12 @@ const App = ({ i18n }) => {
             />
             Albanian
           </FormGroup>
-          <Alert isOpen={alertOpen} toggle={handleAlert} color="success" fade={true}>
+          <Alert
+            isOpen={alertOpen}
+            toggle={handleAlert}
+            color="success"
+            fade={true}
+          >
             {alertMessage}
           </Alert>
           <Row>
