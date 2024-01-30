@@ -24,7 +24,7 @@ const Create = (props) => {
 
     // go back to home after insertion
     // TO DO: Show success notification then redirect
-    window.location = updated.category === "small" ? "pakice" : "/large"
+    window.location = updated.category === "small" ? "/small" : "/large"
   }
 
   if (!isLoggedIn()) {

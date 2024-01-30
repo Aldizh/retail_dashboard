@@ -9,7 +9,7 @@ const firstRecord = {
   quantity: 120,
   buyPrice: 1.2,
   sellPrice: 1.5,
-  category: 'large'
+  category: 'big'
 }
 
 const secondRecord = {
@@ -18,7 +18,7 @@ const secondRecord = {
   quantity: 10,
   buyPrice: 1.10,
   sellPrice: 1.20,
-  category: 'large'
+  category: 'big'
 }
 
 beforeEach(function(done) {
@@ -43,7 +43,7 @@ describe("test that CRUD operations are working as expected", () => {
       assert(results.length === 1)
       assert(results[0].id === record.id)
       assert(results[0].name === 'Kiwis')
-      assert(results[0].category === 'large')
+      assert(results[0].category === 'big')
       done()
     })
   })

@@ -22,7 +22,7 @@ const NavBar = ({ t, handleLogout, isLoggedIn, loginWithGoogle, history }) => {
       axios.get(`/api/auth_callback?code=${code}`).then(res => {
         const token = res.data?.data?.id_token
         if (token) loginWithGoogle(token).then(() => {
-          history.replace("/dashboard")
+          history.replace("/")
           // TO DO: Consider alternative to this reload
           window.location.reload()
         })
@@ -36,7 +36,7 @@ const NavBar = ({ t, handleLogout, isLoggedIn, loginWithGoogle, history }) => {
       <Collapse isOpen={isOpen} navbar>
         <Nav className="ml-auto" fill pills navbar>
           <NavItem>
-            <NavLink style={{ color: currentTheme.text }} href="/dashboard">{t("home")}</NavLink>
+            <NavLink style={{ color: currentTheme.text }} href="/">{t("home")}</NavLink>
           </NavItem>
           <NavItem>
             <NavLink style={{ color: currentTheme.text }} href="/create">{t("dataEntry")}</NavLink>

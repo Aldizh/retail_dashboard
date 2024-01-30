@@ -119,7 +119,7 @@ const EditArticle = ({ setAlertMessage, setAlertOpen, t }) => {
   };
 
   return (
-    <Col lg="6" sm="12" xs="12">
+    <>
       <h3 style={{ background: currentTheme.background}}>{t("dataCorrection")}</h3>
       <div className="editDiv">
         <Input
@@ -162,7 +162,7 @@ const EditArticle = ({ setAlertMessage, setAlertOpen, t }) => {
           deleteText={t("delete")}
         />
       </div>
-    </Col>
+    </>
   );
 };
 

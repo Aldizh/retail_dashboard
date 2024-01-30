@@ -13,12 +13,13 @@ import { formatPrice } from '../../utils/numbers';
 import inventoryData from '../../data/inventory';
 import './styles.css';
 
-const Inventory = ({ t }) => {  
+const Inventory = ({ t, isDark }) => {  
   const dispatch = useDispatch()
   const pageData = useSelector((state) => state.page.pageData)
   const currentPage = useSelector((state) => state.page.currentPage)
   const totalCount = useSelector((state) => state.page.totalCount)
   const recordsPerPage = useSelector((state) => state.page.recordsPerPage)
+  const language = useSelector((state) => state.i18.language)
 
   const { currentTheme } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
@@ -93,15 +94,20 @@ const Inventory = ({ t }) => {
   }
 
   return (
-    <div style={{
+    <div
+      style={{
         color: currentTheme.text,
+        backgroundColor: currentTheme.background,
         textAlign: 'center'
       }}
     >
-      <h3 style={{
-        background: currentTheme.background}}
-        id="shitjetShumice">{t('inventory')}</h3>
-      <Table responsive size="sm">
+      <h3
+        style={{ background: currentTheme.background }}
+        id="shitjetShumice"
+      >
+        {t('inventory')}
+      </h3>
+      <Table responsive size="sm" dark={isDark}>
         <thead>
           <tr>
             <th>{t('barCode')}</th>
@@ -116,13 +122,13 @@ const Inventory = ({ t }) => {
               <th>{dat._id}</th>
               <td>{dat.name}</td>
               <td>{dat.quantity}</td>
-              <td>{formatPrice(dat.buyPrice)}</td>
+              <td>{formatPrice(dat.buyPrice, language)}</td>
             </tr>
           ))}
         </tbody>
       </Table>
       <ul id="page-numbers"
-        style={{background: currentTheme.background}}
+        style={{ background: currentTheme.background }}
       >
         <button
           className="nav-button"

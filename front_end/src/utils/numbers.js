@@ -1,7 +1,6 @@
-export const formatPrice = (price) => {
+export const formatPrice = (price, language) => {
   const decimalPrice = parseFloat(price).toFixed(2)
-  const lang = localStorage.getItem('language');
-  switch (lang) {
+  switch (language) {
     case 'en':
       return `$${decimalPrice}`
     case 'al':

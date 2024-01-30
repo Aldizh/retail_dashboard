@@ -9,12 +9,10 @@ const Footer = (props) => {
   const { currentTheme } = useTheme();
  
   return (
-    <div className="footer">
-      <CardFooter style={{ background: currentTheme.background, color: currentTheme.text }}>
-        <CardText>&copy; {new Date().getFullYear()} {props.t("title")}.</CardText>
-        <CardText>All Rights Reserved.</CardText>
-      </CardFooter>
-    </div>
+    <CardFooter style={{ background: currentTheme.background, color: currentTheme.text }}>
+      <CardText>&copy; {new Date().getFullYear()} {props.t("title")}.</CardText>
+      <CardText>All Rights Reserved.</CardText>
+    </CardFooter>
   )
 }
 
