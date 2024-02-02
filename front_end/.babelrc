@@ -1,3 +1,13 @@
+/*
+  - plugins run before presets
+  - plugins are in order (first to last)
+  - presets are in reverse order
+*/
+
 {
-  "presets": ["@babel/preset-env", "@babel/preset-react"]
+  "plugins": [
+    "@babel/plugin-transform-runtime",
+    "@babel/plugin-syntax-dynamic-import"
+  ],
+  "presets": ["@babel/preset-env"]
 }

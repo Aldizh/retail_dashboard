@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux'
-import { Col, Input } from "reactstrap";
+import { Input } from "reactstrap";
 import { withTranslation } from "react-i18next";
 import { findIndex, isNil, propEq } from "ramda";
 import axios from "axios";
@@ -74,7 +74,7 @@ const EditArticle = ({ setAlertMessage, setAlertOpen, t }) => {
     if (status === 200) {
       const deleteIndex = findIndex(propEq("_id", deleted.data._id))(allArticles.data);
       if (deleteIndex === -1) {
-        alert("No such records exist in our database");
+        window.alert("No such records exist in our database");
       } else {
         setId("");
         setItem({});

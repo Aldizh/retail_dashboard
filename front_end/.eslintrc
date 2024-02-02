@@ -5,20 +5,23 @@
     "node": true
   },
   "extends": ["eslint:recommended"],
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
-    "ecmaVersion": 6,
-    "ecmaFeatures": {
-      "jsx": true,
-      "arrowFunctions": true
-    },
-    "sourceType": "module"
+    "requireConfigFile": false,
+    "babelOptions": {
+      "babelrc": false,
+      "configFile": false,
+      "presets": ["@babel/preset-env"],
+      "parserOpts": {
+        "plugins": ["jsx"]
+      }
+    }
   },
   "rules": {
     "no-console": 0,
     "react/prop-types": 0,
     "no-unused-vars": "warn",
-    "no-param-reassign": ["error", { "props": false }],
+    "no-param-reassign": ["error", { "props": false }]
   },
   "globals": {
     "window": true,

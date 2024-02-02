@@ -1,15 +1,8 @@
 import React from 'react';
 import { Button, Form } from 'reactstrap';
 import { withTranslation } from 'react-i18next';
-import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-
-const ButtonRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
 
 const LoginForm = ({ loginAnonymous, loginWithKey, t }) => {
   const handleLogin = () => {
@@ -40,10 +33,14 @@ const LoginForm = ({ loginAnonymous, loginWithKey, t }) => {
 
   return (
     <Form>
-      <ButtonRow>
+      <div style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between"
+      }}>
         <Button onClick={handleLogin}>{t('anonymous')}</Button>
         <Button onClick={handleLoginWithKey}>{t('authenticated')}</Button>
-      </ButtonRow>
+      </div>
     </Form>
   );
 };

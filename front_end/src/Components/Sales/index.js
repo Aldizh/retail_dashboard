@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Redirect } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { withTranslation } from "react-i18next";
 import { Table, Button } from "reactstrap";
 import axios from "axios";
 
+import NavBar from '../../NavBar';
+import { isLoggedIn, logoutUser } from "../../Realm";
 import Totals from "./Totals";
-import { isLoggedIn } from "../../Realm";
 import { formatPrice } from "../../utils/numbers";
 import "./styles.css";
 
 const SalesComp = ({ t, category }) => {
+  let navigate = useNavigate();
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [conversionRate, setConversionRate] = useState(1);
@@ -55,7 +57,7 @@ const SalesComp = ({ t, category }) => {
   }, [category]);
 
   const handleEdit = (id) => {
-    window.location = `/sales/${id}`;
+    navigate(`/sales/${id}`);
   };
 
   const handleDelete = (id) => {
@@ -64,15 +66,13 @@ const SalesComp = ({ t, category }) => {
       .then((response) => {
         if (response.status === 200) {
           console.log("Successfully deleted");
-          window.location.reload();
+          navigate(`/sales/${id}`);
         }
       })
       .catch((err) => console.error("Error deleting:", err));
   };
 
-  if (!isLoggedIn()) {
-    return <Redirect to="/login" />;
-  }
+  if (!isLoggedIn()) { navigate("/login") }
 
   let totalBuys = 0.0;
   let totalSales = 0.0;
@@ -82,6 +82,7 @@ const SalesComp = ({ t, category }) => {
     <div>Loading...</div>
   ) : (
     <div>
+      <NavBar handleLogout={logoutUser} isLoggedIn={isLoggedIn} />
       <Table responsive size="sm">
         <thead>
           <tr>

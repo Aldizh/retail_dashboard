@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import axios from "axios";
 import { withTranslation } from "react-i18next";
 import Form from "../Form";
 
-const ShowSale = ({ t, location }) => {
+const ShowSale = ({ t }) => {
   const [sale, setSale] = useState({});
+  const location = useLocation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchSaleData = async () => {
@@ -29,7 +33,7 @@ const ShowSale = ({ t, location }) => {
           const parentLocation =
             sale.category === "big" ? "/large" : "/small";
           // go back to parent page
-          window.location = parentLocation;
+          navigate(parentLocation)
         }
       })
       .catch((err) => {

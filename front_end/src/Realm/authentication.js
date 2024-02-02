@@ -28,9 +28,8 @@ export async function loginAnonymous() {
   return user;
 }
 
-// Log in a user using API key
-// TO DO: In production we need to make sure this is moved to a config file
-export async function loginWithKey(apiKey) {
+// Log in using API key
+export async function loginWithKey() {
   // Create an API Key credential
   const credentials = Realm.Credentials.apiKey(process.env.REACT_APP_REALM_API_KEY);
   // Authenticate the user

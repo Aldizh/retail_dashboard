@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Provider, useDispatch } from "react-redux";
-import { Redirect } from "react-router";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { withTranslation } from "react-i18next";
 import { Container, Row, Col, Input, Alert, FormGroup } from "reactstrap";
 
 import "../i18n";
-import { isLoggedIn } from "../Realm";
+import NavBar from '../NavBar';
+import { isLoggedIn, logoutUser } from "../Realm";
 import { useTheme } from '../Themes/ThemeContext';
 import Inventory from "../Components/Inventory/";
 import EditArticle from "../Components/EditArticle"
@@ -15,9 +16,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles.css";
 
 const App = ({ i18n }) => {
+  let navigate = useNavigate();
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
-  const [language, setLanguage] = useState("en")
+  const [language, setLanguage] = useState(i18n.language || "en")
 
   const { currentTheme } = useTheme();
   const isDark = (currentTheme.text === "#fff")
@@ -47,12 +49,11 @@ const App = ({ i18n }) => {
     setAlertOpen(!alertOpen);
   };
 
-  if (!isLoggedIn()) {
-    return <Redirect to="/login" />;
-  }
+  if (!isLoggedIn()) { navigate("/login") }
 
   return (
-    <div style={{ color: currentTheme.text, backgroundColor: currentTheme.background }}>
+    <>
+      <NavBar handleLogout={logoutUser} isLoggedIn={isLoggedIn} />
       <Container>
         <FormGroup
           className="translationButtons"
@@ -104,7 +105,7 @@ const App = ({ i18n }) => {
             </Col>
         </Row>
       </Container>
-    </div>
+    </>
   );
 };
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom";
 import axios from "axios"
 
 import { withTranslation } from "react-i18next"
@@ -7,7 +8,8 @@ import { Navbar, Nav, NavItem, NavLink, NavbarToggler, Collapse, Button } from '
 import { useTheme } from '../Themes/ThemeContext';
 import "./styles.css"
 
-const NavBar = ({ t, handleLogout, isLoggedIn, loginWithGoogle, history }) => {
+const NavBar = ({ t, handleLogout, isLoggedIn, loginWithGoogle }) => {
+  let navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(true)
 
   const { currentTheme, toggleTheme } = useTheme();
@@ -22,30 +24,32 @@ const NavBar = ({ t, handleLogout, isLoggedIn, loginWithGoogle, history }) => {
       axios.get(`/api/auth_callback?code=${code}`).then(res => {
         const token = res.data?.data?.id_token
         if (token) loginWithGoogle(token).then(() => {
-          history.replace("/")
-          // TO DO: Consider alternative to this reload
-          window.location.reload()
+          navigate("/")
         })
       })
     }
   }, [])
 
   return (
-    <Navbar style={{ background: currentTheme.background, color: currentTheme.text }} expand="md">
+    <Navbar style={{
+      background: currentTheme.background,
+      color: currentTheme.text,
+      marginBottom: 30,
+    }} expand="md">
       <NavbarToggler onClick={toggleNavbar} />
       <Collapse isOpen={isOpen} navbar>
         <Nav className="ml-auto" fill pills navbar>
           <NavItem>
-            <NavLink style={{ color: currentTheme.text }} href="/">{t("home")}</NavLink>
+            <NavLink style={{ color: currentTheme.text }} onClick={() => navigate("/")}>{t("home")}</NavLink>
           </NavItem>
           <NavItem>
-            <NavLink style={{ color: currentTheme.text }} href="/create">{t("dataEntry")}</NavLink>
+            <NavLink style={{ color: currentTheme.text }} onClick={() => navigate("/create")}>{t("dataEntry")}</NavLink>
           </NavItem>
           <NavItem>
-            <NavLink style={{ color: currentTheme.text }} href="/small">{t("small")}</NavLink>
+            <NavLink style={{ color: currentTheme.text }} onClick={() => navigate("/small")}>{t("small")}</NavLink>
           </NavItem>
           <NavItem style={{ color: currentTheme.text }}>
-            <NavLink style={{ color: currentTheme.text }} href="/large">{t("big")}</NavLink>
+            <NavLink style={{ color: currentTheme.text }} onClick={() => navigate("/large")}>{t("big")}</NavLink>
           </NavItem>
         </Nav>
       </Collapse>

@@ -39,6 +39,7 @@ const resources = {
       authenticated: 'Enter with key',
       loadAll: 'Load Test Data',
       deleteAll: 'Delete Test Data',
+      actions: 'Actions'
     },
   },
   al: {
@@ -76,6 +77,7 @@ const resources = {
       authenticated: 'Hyr me celes',
       loadAll: 'Ngarko te dhena prove',
       deleteAll: 'Fshi te dhenat prove',
+      actions: 'Veprimet'
     },
   },
   es: {
@@ -113,6 +115,7 @@ const resources = {
       authenticated: 'Ingresar con clave',
       loadAll: 'Cargar Datos de Prueba',
       deleteAll: 'Eliminar Datos de Prueba',
+      actions: 'Las Acciones'
     }
   }
 };

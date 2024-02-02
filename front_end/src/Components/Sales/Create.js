@@ -1,13 +1,15 @@
 import React from "react"
-import { Redirect } from "react-router"
+import { useNavigate } from "react-router-dom";
 import axios from "axios"
 import { withTranslation } from "react-i18next"
 
-import { isLoggedIn  } from "../../Realm"
+import NavBar from '../../NavBar';
+import { isLoggedIn, logoutUser } from "../../Realm";
 import Form from "../Form"
 import "./styles.css"
 
 const Create = (props) => {
+  let  navigate = useNavigate()
   const persistData = (newRecord) => {
     axios
       .post("/api/sales", newRecord)
@@ -24,20 +26,21 @@ const Create = (props) => {
 
     // go back to home after insertion
     // TO DO: Show success notification then redirect
-    window.location = updated.category === "small" ? "/small" : "/large"
+    updated.category === "small" ? navigate("/small") : navigate("/large")
   }
 
-  if (!isLoggedIn()) {
-    return <Redirect to='/login'/>
-  }
+  if (!isLoggedIn()) { navigate("/login") }
 
   return (
-    <Form
-      t={props.t}
-      onSubmit={onSubmit}
-      sale={{}}
-      mode={props.t("newSale")}
-    />
+    <>
+      <NavBar handleLogout={logoutUser} isLoggedIn={isLoggedIn} />
+      <Form
+        t={props.t}
+        onSubmit={onSubmit}
+        sale={{}}
+        mode={props.t("newSale")}
+      />
+    </>
   )
 }
 
