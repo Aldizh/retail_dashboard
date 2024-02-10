@@ -56,7 +56,6 @@
     "autoprefixer": "9.0.2",
     "babel-jest": "^26.6.0",
     "babel-plugin-dev-expression": "^0.2.2",
-    "babel-plugin-dynamic-import-node": "^2.3.3",
     "babel-plugin-jsx-control-statements": "^4.0.0",
     "babel-plugin-module-resolver": "^3.2.0",
     "babel-plugin-react-css-modules": "^5.2.6",
