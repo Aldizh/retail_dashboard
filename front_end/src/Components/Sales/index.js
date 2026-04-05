@@ -3,10 +3,9 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { withTranslation } from "react-i18next";
 import { Table, Button } from "reactstrap";
-import axios from "axios";
+import api from "../../api";
 
 import NavBar from '../../NavBar';
-import { isLoggedIn, logoutUser } from "../../Realm";
 import Totals from "./Totals";
 import { formatPrice } from "../../utils/numbers";
 import "./styles.css";
@@ -21,14 +20,13 @@ const SalesComp = ({ t, category }) => {
   const language = useSelector((state) => state.i18.language)
 
   useEffect(() => {
-    const source = axios.CancelToken.source();
     setIsLoading(true);
 
     const fetchData = async () => {
       try {
         const [salesResponse, currencyResponse] = await Promise.all([
-          axios.get("/api/sales", { cancelToken: source.token }),
-          axios.get("/reference/currencies", { cancelToken: source.token }),
+          api.get("/api/sales"),
+          api.get("/reference/currencies"),
         ]);
 
         const { data: salesData } = salesResponse;
@@ -50,10 +48,6 @@ const SalesComp = ({ t, category }) => {
     };
 
     fetchData();
-
-    return () => {
-      source.cancel("Landing Component got unmounted");
-    };
   }, [category]);
 
   const handleEdit = (id) => {
@@ -61,7 +55,7 @@ const SalesComp = ({ t, category }) => {
   };
 
   const handleDelete = (id) => {
-    axios
+    api
       .delete(`/api/sales/${id}`)
       .then((response) => {
         if (response.status === 200) {
@@ -72,8 +66,6 @@ const SalesComp = ({ t, category }) => {
       .catch((err) => console.error("Error deleting:", err));
   };
 
-  if (!isLoggedIn()) { navigate("/login") }
-
   let totalBuys = 0.0;
   let totalSales = 0.0;
   let totalProfit = 0.0;
@@ -82,7 +74,7 @@ const SalesComp = ({ t, category }) => {
     <div>Loading...</div>
   ) : (
     <div>
-      <NavBar handleLogout={logoutUser} isLoggedIn={isLoggedIn} />
+      <NavBar />
       <Table responsive size="sm">
         <thead>
           <tr>

@@ -1,34 +1,19 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { useNavigate } from "react-router-dom";
-import axios from "axios"
 
 import { withTranslation } from "react-i18next"
 import { Navbar, Nav, NavItem, NavLink, NavbarToggler, Collapse, Button } from 'reactstrap'
 
+import { hasLoggedInUser, logoutUser } from "../Authentication";
 import { useTheme } from '../Themes/ThemeContext';
 import "./styles.css"
 
-const NavBar = ({ t, handleLogout, isLoggedIn, loginWithGoogle }) => {
+const NavBar = ({ t }) => {
   let navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(true)
 
   const { currentTheme, toggleTheme } = useTheme();
   const toggleNavbar = () => setIsOpen(!isOpen)
-
-  useEffect(() => {
-    // check for google authentication here
-    const url = new URL(window.location.href)
-    const code = url.searchParams.get('code')
-
-    if (!isLoggedIn() && code) {
-      axios.get(`/api/auth_callback?code=${code}`).then(res => {
-        const token = res.data?.data?.id_token
-        if (token) loginWithGoogle(token).then(() => {
-          navigate("/")
-        })
-      })
-    }
-  }, [])
 
   return (
     <Navbar style={{
@@ -54,11 +39,11 @@ const NavBar = ({ t, handleLogout, isLoggedIn, loginWithGoogle }) => {
         </Nav>
       </Collapse>
       <div>
-        {isLoggedIn() ? <Button
+        {hasLoggedInUser() ? <Button
           secondary="true"
           size="sm"
           block={false}
-          onClick={(e) => handleLogout(e)}
+          onClick={(e) => logoutUser(e)}
           className="navButton"
         >Logout
         </Button> : <div />

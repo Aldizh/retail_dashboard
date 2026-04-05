@@ -1,10 +1,30 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Form, Label, FormGroup, FormFeedback, Input, Button } from "reactstrap"
+import api from '../api'
 import { useInputChange } from '../hooks/useInputChange'
 
 const NewSale = (props) => {
   const { t, mode, onSubmit, sale } = props
   const [input, handleInputChange] = useInputChange(sale)
+  const [items, setItems] = useState([])
+  const [isLoadingItems, setIsLoadingItems] = useState(false)
+
+  // Fetch items from the API
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        setIsLoadingItems(true)
+        const response = await api.get('/api/articles')
+        setItems(response.data.data || [])
+      } catch (error) {
+        console.error('Error fetching items:', error)
+      } finally {
+        setIsLoadingItems(false)
+      }
+    }
+
+    fetchItems()
+  }, [])
 
   const submitHandler = (e) => {
     e.stopPropagation()
@@ -39,11 +59,19 @@ const NewSale = (props) => {
           <Input
             id="name"
             name="name"
-            type="text"
-            placeholder="Kiwis"
-            value={input.name}
+            type="select"
+            placeholder="Select an item"
+            value={input.name || ''}
             onChange={handleInputChange}
-          />
+            disabled={isLoadingItems}
+          >
+            <option value="">-- Select Item --</option>
+            {items.map((item) => (
+              <option key={item._id} value={item.name}>
+                {item.name}
+              </option>
+            ))}
+          </Input>
         </FormGroup>
         <FormGroup>
           <Label for="quantity">

@@ -1,72 +1,179 @@
-# Inventory and Sales Manager
+# Setup Guide
 
-_A full stack application using React JS for the front end, Node JS for the back end and Mongo DB_
+## Prerequisites
 
-## Setup
+- **Node.js**: v16.13.1 or higher
+- **npm** or **yarn**: For package management
+- **MongoDB Atlas**: For database (or local MongoDB for development)
 
-1. Make sure [Node](https://nodejs.org/en/download/) is at v16.13.1 or above.
-2. Make sure to to whitelist your IP before starting the project.
-3. If yarn install fails run following command to bypass the browser restriction.
+## Environment Configuration
 
-```
-npm config set strict-ssl false
-```
+### Backend Setup
 
-4. Change the proxy to the following when working on development
-
-```
-"proxy": "http://localhost:5001"
+1. Navigate to the `back_end` directory:
+```bash
+cd back_end
 ```
 
-4. Starting the app in a development environment (starts both server and client simultaneously)
-
+2. Copy the environment template:
+```bash
+cp .env.default .env
 ```
+
+3. Edit `.env` and fill in your actual values:
+```env
+ATLAS_URI="mongodb+srv://username:password@cluster.mongodb.net/retail_dashboard"
+JWT_SECRET="your-very-secure-random-string-change-this"
+PORT=5001
+CURRENCY_API_KEY="your-currency-api-key"
+```
+
+**Important**: 
+- Never commit `.env` to version control (it's in `.gitignore`)
+- Use a strong, random string for `JWT_SECRET` in production
+- Get `CURRENCY_API_KEY` from https://currencyapi.com or similar service
+- Use MongoDB Atlas connection string for `ATLAS_URI`
+
+### Frontend Setup
+
+1. Navigate to the `front_end` directory:
+```bash
+cd front_end
+```
+
+2. Copy the environment template:
+```bash
+cp .env.default .env
+```
+
+3. Configure the API URL (usually doesn't need changes for local development):
+```env
+REACT_APP_API_URL=http://localhost:5001
+```
+
+For production, update this to your production backend URL.
+
+## Installation
+
+### Install Dependencies
+
+From the root directory:
+```bash
+# Install root dependencies
+npm install
+
+# Install backend dependencies
+cd back_end && npm install
+
+# Install frontend dependencies
+cd ../front_end && npm install
+```
+
+Or with yarn:
+```bash
+yarn install:all
+```
+
+## Running the Application
+
+### Development Mode (Recommended)
+
+From the root directory, run both backend and frontend simultaneously:
+```bash
 yarn start:dev
 ```
 
-5. Starting the app in production environment
+This starts:
+- **Backend**: http://localhost:5001
+- **Frontend**: http://localhost:3006
 
-```
+### Production Mode
+
+```bash
 NODE_ENV=production yarn start
 ```
 
-6. Install mongodb client and start the daemon in order to run the test suite
+## Default Demo Accounts
 
+The application includes demo accounts for testing:
+
+- **Demo User**: 
+  - Username: `demo`
+  - Password: `demo123`
+
+- **Admin User** (if created):
+  - Username: `admin`
+  - Password: `admin123`
+
+## Security Checklist Before Deployment
+
+- [ ] Changed `JWT_SECRET` to a strong random string
+- [ ] Updated `ATLAS_URI` with production MongoDB credentials
+- [ ] Updated `REACT_APP_API_URL` to production backend URL
+- [ ] Verified `.env` files are in `.gitignore`
+- [ ] Removed any sensitive data from committed files
+- [ ] Set appropriate CORS origins in backend for production domains
+- [ ] Enabled HTTPS in production
+- [ ] Set secure cookie flags for production
+
+## Troubleshooting
+
+### Port Already in Use
+
+If port 5001 is already in use:
+```bash
+# Kill the process using the port
+lsof -i :5001 -t | xargs kill -9
+
+# Or specify a different port in .env
+PORT=5002
 ```
-brew install mongodb-community@4.4
-mongod --dbpath /usr/local/var/mongodb
-```
 
-7. In order to debug jest tests put a debugger statement in the test you are working with and run the following
+### MongoDB Connection Issues
 
-```
-node --debug-brk --inspect ./node_modules/.bin/jest -i --env jest-environment-node-debug
-```
+- Verify `ATLAS_URI` is correct
+- Check IP whitelist in MongoDB Atlas (add your IP)
+- Ensure credentials are correct
+- Test connection string in MongoDB Compass
 
-This will output a link which you can paste into the browser and start the debugger 8. Setup [git hooks](docs/setup.md#git-hooks) to keep the docs updated.
+### CORS Errors
 
-## Package maintenance
+The backend CORS is configured for local development (`localhost:3006` and `localhost:3000`). For production, update the CORS settings in `back_end/server.js`.
 
-Some helpful yarn tools to maintain dependencies
+## Environment Variables Reference
 
-- For checking any security flaws with past versions
-  ```
-  yarn audit
-  ```
-- To automatically fix some outdated packages:
-  ```
-  yarn audit:fix
-  ```
-- To manually fix try adding the newer version of the related package and test the app, if no breaking changes run
-  ```
-  yarn add package@new_version
-  ```
-- Be sure to commit `yarn.lock` file to help other collaborators
+### Backend (.env)
 
-## Learn
+| Variable | Purpose | Example |
+|----------|---------|---------|
+| `ATLAS_URI` | MongoDB connection string | `mongodb+srv://user:pass@cluster.mongodb.net/dbname` |
+| `JWT_SECRET` | Secret key for JWT signing | Use `openssl rand -hex 32` to generate |
+| `PORT` | Server port | `5001` |
+| `CURRENCY_API_KEY` | Currency conversion API key | Get from currencyapi.com |
 
-- [React](https://reactjs.org/)
-- [Node](https://nodejs.org/en/docs/)
-- [MongoDB](https://docs.mongodb.com/manual/introduction)
+### Frontend (.env)
 
-## \*Note: To connect to the live DB make sure to whitelist your public IP
+| Variable | Purpose | Example |
+|----------|---------|---------|
+| `REACT_APP_API_URL` | Backend API URL | `http://localhost:5001` or production URL |
+
+## Security Notes
+
+⚠️ **Never commit `.env` files to version control!**
+
+Both `.env` patterns are in `.gitignore`:
+- `back_end/.gitignore`
+- `front_end/.gitignore`
+
+If `.env` was accidentally committed:
+1. Remove from git history: `git rm --cached .env`
+2. Force commit: `git commit -m "Remove .env file"`
+3. Rotate all secrets immediately
+4. Review git history for leaks
+
+## Getting Help
+
+- Check application logs for error messages
+- Verify all environment variables are set correctly
+- Ensure MongoDB Atlas is accessible from your IP
+- Check that both frontend and backend ports are available

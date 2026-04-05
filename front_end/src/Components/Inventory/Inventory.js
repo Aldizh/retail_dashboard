@@ -3,7 +3,7 @@ import { withTranslation } from 'react-i18next';
 import {
   Table,
 } from 'reactstrap';
-import axios from 'axios';
+import api from '../../api';
 import { useSelector, useDispatch } from 'react-redux'
 
 import { updatePage, updatePageData, updateTotalCount } from '../../redux/inventory_reducer'
@@ -27,7 +27,7 @@ const Inventory = ({ t, isDark }) => {
   const [pageGroup, setPageGroup] = useState(0);
 
   useEffect(() => {
-    axios
+    api
       .get(`/api/articles?pageNumber=${currentPage}`)
       .then(({ data }) => {
         dispatch(updatePageData(data.data))
@@ -35,7 +35,7 @@ const Inventory = ({ t, isDark }) => {
   }, [currentPage])
 
   useEffect(() => {
-    axios
+    api
       .get(`/api/articles`)
       .then(({ data }) => {
         dispatch(updateTotalCount(data.data.length))
@@ -58,12 +58,12 @@ const Inventory = ({ t, isDark }) => {
 
   const handleDataLoad = async () => {
     setIsLoading(true);
-    await axios.post("/api/articles", inventoryData).catch((err) => {
+    await api.post("/api/articles", inventoryData).catch((err) => {
       setIsLoading(false);
       throw new Error(err);
     });
 
-    const updated = await axios.get("/api/articles")
+    const updated = await api.get("/api/articles")
     dispatch(updateTotalCount(updated.data.data.length))
 
     // pagination data
@@ -75,7 +75,7 @@ const Inventory = ({ t, isDark }) => {
 
   const handleBulkDelete = async () => {
     setIsLoading(true);
-    const res = await axios.delete("/api/articles").catch((err) => {
+    const res = await api.delete("/api/articles").catch((err) => {
       setIsLoading(false);
       throw new Error(err);
     });
@@ -85,7 +85,7 @@ const Inventory = ({ t, isDark }) => {
       console.log("successfully deleted test data");
     }
 
-    const updated = await axios.get("/api/articles")
+    const updated = await api.get("/api/articles")
     dispatch(updateTotalCount(updated.data.data.length))
   
     // pagination
@@ -110,7 +110,7 @@ const Inventory = ({ t, isDark }) => {
       <Table responsive size="sm" dark={isDark}>
         <thead>
           <tr>
-            <th>{t('barCode')}</th>
+            {/* <th>{t('barCode')}</th> */}
             <th>{t('item')}</th>
             <th>{t('quantity')}</th>
             <th>{t('buyPrice')}</th>
@@ -119,7 +119,7 @@ const Inventory = ({ t, isDark }) => {
         <tbody>
           {pageData.map((dat, index) => (
             <tr key={`${index} - ${dat._id}`}>
-              <th>{dat._id}</th>
+              {/* <th>{dat._id}</th> */}
               <td>{dat.name}</td>
               <td>{dat.quantity}</td>
               <td>{formatPrice(dat.buyPrice, language)}</td>
@@ -136,7 +136,7 @@ const Inventory = ({ t, isDark }) => {
           onClick={() => {
             const newPage = (pageGroup - 1) * recordsPerPage
             if (newPage > -1) {
-              axios
+              api
                 .get(`/api/articles?pageNumber=${newPage + 1}`)
                 .then(({ data }) => {
                   dispatch(updatePageData(data.data))
@@ -166,7 +166,7 @@ const Inventory = ({ t, isDark }) => {
             const newPage = (pageGroup + 1) * recordsPerPage
 
             if (newPage < totalCount / recordsPerPage) {
-              axios
+              api
                 .get(`/api/articles?pageNumber=${newPage + 1}`)
                 .then(({ data }) => {
                   dispatch(updatePageData(data.data))

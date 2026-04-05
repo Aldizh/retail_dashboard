@@ -5,10 +5,10 @@ import { createBrowserHistory } from 'history';
 import Router from './Router';
 import Footer from './Footer';
 import {
-  isLoggedIn,
+  hasLoggedInUser,
   loginAnonymous,
   loginWithKey,
-} from "./Realm"
+} from "./Authentication"
 import Login from "./Login"
 import { ThemeProvider } from "./Themes/ThemeContext";
 import store from './redux/store'
@@ -20,7 +20,7 @@ class RetailDashboard extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        {isLoggedIn() ? (
+        {hasLoggedInUser() ? (
           <ThemeProvider>
             <Router history={history} />
             <Footer />

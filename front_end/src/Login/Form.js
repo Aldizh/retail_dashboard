@@ -1,38 +1,43 @@
-import React from 'react';
-import { Button, Form } from 'reactstrap';
+import React, { useState } from 'react';
+import { Button, Form, Alert } from 'reactstrap';
 import { withTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import axios from 'axios';
+import api from '../api';
 
 const LoginForm = ({ loginAnonymous, loginWithKey, t }) => {
-  const handleLogin = () => {
-    loginAnonymous().then((authResponse) => {
-      const { _accessToken } = authResponse
-      axios.post("/set/cookie", {
-        token: _accessToken
-      }).then(res => {
-        if (res.status === 200) window.location.reload();
-      }).catch(err => {
-        console.log("Error setting cookie", err.message);
-      })
-    });
+  const [error, setError] = useState(null);
+
+  const handleLogin = async () => {
+    try {
+      setError(null);
+      await loginAnonymous();
+      // Authentication successful, reload to enter the app
+      window.location.reload();
+    } catch (err) {
+      console.log("Error during anonymous login", err.message);
+      setError(err.message);
+    }
   };
 
-  const handleLoginWithKey = () => {
-    loginWithKey().then((authResponse) => {
-      const { _accessToken } = authResponse
-      axios.post("/set/cookie", {
-        token: _accessToken
-      }).then(res => {
-        if (res.status === 200) window.location.reload();
-      }).catch(err => {
-        console.log("Error setting cookie", err.message);
-      })
-    });
+  const handleLoginWithKey = async () => {
+    try {
+      setError(null);
+      await loginWithKey();
+      // Authentication successful, reload to enter the app
+      window.location.reload();
+    } catch (err) {
+      console.log("Error during API key login", err.message);
+      setError(err.message);
+    }
   };
 
   return (
     <Form>
+      {error && (
+        <Alert color="danger" style={{ marginBottom: '1rem' }}>
+          {error}
+        </Alert>
+      )}
       <div style={{
         display: "flex",
         flexDirection: "row",
@@ -46,7 +51,9 @@ const LoginForm = ({ loginAnonymous, loginWithKey, t }) => {
 };
 
 LoginForm.propTypes = {
-  loginAnonymous: PropTypes.any,
+  loginAnonymous: PropTypes.func.isRequired,
+  loginWithKey: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
 };
 
 export default withTranslation()(LoginForm);

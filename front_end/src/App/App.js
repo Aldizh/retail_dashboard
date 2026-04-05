@@ -6,7 +6,7 @@ import { Container, Row, Col, Input, Alert, FormGroup } from "reactstrap";
 
 import "../i18n";
 import NavBar from '../NavBar';
-import { isLoggedIn, logoutUser } from "../Realm";
+import { hasLoggedInUser, logoutUser } from "../Authentication";
 import { useTheme } from '../Themes/ThemeContext';
 import Inventory from "../Components/Inventory/";
 import EditArticle from "../Components/EditArticle"
@@ -49,11 +49,11 @@ const App = ({ i18n }) => {
     setAlertOpen(!alertOpen);
   };
 
-  if (!isLoggedIn()) { navigate("/login") }
+  if (!hasLoggedInUser()) { navigate("/login") }
 
   return (
     <>
-      <NavBar handleLogout={logoutUser} isLoggedIn={isLoggedIn} />
+      <NavBar handleLogout={logoutUser} hasLoggedInUser={hasLoggedInUser} />
       <Container>
         <FormGroup
           className="translationButtons"
